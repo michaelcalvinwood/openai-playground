@@ -124,11 +124,23 @@ exports.chatGPT = async (prompt, temperature = .4) => await getTurboText(prompt,
 exports.chatJSON = async (prompt, temperature = .4) => await getTurboJSON(prompt, temperature);
 
 
+exports.explainToHighScholer = async (text) => {
+    const numTextWords = text.split(' ').length;
+    const numResponseWords = Math.floor(.9 * numTextWords);
+
+    const prompt = `'''Explain the facts and ideas disclosed in the following Document. Use simple terms and sentences. The response must be at least ${numResponseWords} words.
+    
+    Document:
+    ${text}'''`
+
+    return exports.chatGPT(prompt)
+}
+
 exports.getFactsAndQuotes = async (text, maxPercent = 100) => {
     const numSentences = nlp.numSentences;
     const numFacts = Math.floor(numSentences * (maxPercent / 100));
 
-    const prompt = `'''Create a list of ${numFacts} from the Text below. Also extract all third-party quotes. The return format must be stringified JSON in the following format:
+    const prompt = `'''Extract ${numFacts} from the Text below. Use simple terms and sentences. Also extract all third-party quotes. The return format must be stringified JSON in the following format:
     {
         facts: array of facts goes here,
         quotes: array of quotes goes here in the following format: {quote, speaker, affiliation}
@@ -138,7 +150,7 @@ exports.getFactsAndQuotes = async (text, maxPercent = 100) => {
     ${text}'''`
 
     console.log('prompt', prompt);
-    
+
     return exports.chatJSON(prompt)
 
 }
