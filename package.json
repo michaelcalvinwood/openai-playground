@@ -1,0 +1,11 @@
+{
+  "name": "openai-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "openai-playground.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Wood",
+  "license": "SEE LICENSE IN license.md"
+}
