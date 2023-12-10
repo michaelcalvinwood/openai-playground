@@ -12,6 +12,7 @@
     "axios": "^1.6.2",
     "dotenv": "^16.3.1",
     "gpt-3-encoder": "^1.1.4",
+    "openai": "^3.3.0",
     "require": "^2.4.20",
     "wink-eng-lite-web-model": "^1.5.2",
     "wink-nlp": "^1.14.3"

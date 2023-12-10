@@ -1,3 +1,5 @@
+// openai 4 migration guide: https://chat.openai.com/share/b175130a-0d77-465e-8187-59b92590df8b
+
 const debug = true;
 
 require('dotenv').config();
@@ -7,6 +9,8 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 
 const { Configuration, OpenAIApi } = require("openai");
+
+const nlp = require('./nlp');
 
 const config = {
     apiKey: process.env.FUSAION_OPENAI_KEY,
@@ -119,6 +123,25 @@ const getTurboText = async (prompt, temperature = .4) => {
 exports.chatGPT = async (prompt, temperature = .4) => await getTurboText(prompt, temperature);
 exports.chatJSON = async (prompt, temperature = .4) => await getTurboJSON(prompt, temperature);
 
+
+exports.getFactsAndQuotes = async (text, maxPercent = 100) => {
+    const numSentences = nlp.numSentences;
+    const numFacts = Math.floor(numSentences * (maxPercent / 100));
+
+    const prompt = `'''Create a list of ${numFacts} from the Text below. Also extract all third-party quotes. The return format must be stringified JSON in the following format:
+    {
+        facts: array of facts goes here,
+        quotes: array of quotes goes here in the following format: {quote, speaker, affiliation}
+    }
+    
+    Text:
+    ${text}'''`
+
+    console.log('prompt', prompt);
+    
+    return exports.chatJSON(prompt)
+
+}
 
 exports.getGist = async (text, numSentences = 3) => {
     const prompt = `"""Give the overall gist of the Text below in ${numSentences > 1 ? `${numSentences} sentences` : `1 sentence`}.
